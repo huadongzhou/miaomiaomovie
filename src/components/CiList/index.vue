@@ -1,21 +1,27 @@
 <template>
   <div class="cinema_body">
-    <ul>
-      <li v-for="cinema in cinemaList"
-          :key="cinema.id">
-        <div>
-          <span>{{cinema.nm}}</span>
-          <span class="q"><span class="price">{{cinema.sellPrice}}</span> 元起</span>
-        </div>
-        <div class="address">
-          <span>{{cinema.addr}}</span>
-          <span>{{cinema.distence}}</span>
-        </div>
-        <div class="card">
-           <div v-for="(num,key) in cinema.tag" :key="key" v-if="num === 1" :class="key | formatColor">{{key | formatCard}}</div>
-        </div>
-      </li>
-    </ul>
+    <Loading v-if="isShow" />
+    <Scroller v-else>
+      <ul>
+        <li v-for="cinema in cinemaList"
+            :key="cinema.id">
+          <div>
+            <span>{{cinema.nm}}</span>
+            <span class="q"><span class="price">{{cinema.sellPrice}}</span> 元起</span>
+          </div>
+          <div class="address">
+            <span>{{cinema.addr}}</span>
+            <span>{{cinema.distence}}</span>
+          </div>
+          <div class="card">
+            <div v-for="(num,key) in cinema.tag"
+                 :key="key"
+                 v-if="num === 1"
+                 :class="key | formatColor">{{key | formatCard}}</div>
+          </div>
+        </li>
+      </ul>
+    </Scroller>
   </div>
 </template>
 
@@ -24,15 +30,22 @@ export default {
   name: 'componentCiList',
   data () {
     return {
-      cinemaList: []
+      cinemaList: [],
+      isShow: true,
+      cityId: -1
     }
   },
-  mounted () {
-    this.axios.get('/api/cinemaList?cityId=10').then((res) => {
+  activated () {
+    var cityid = this.$store.state.city.id
+    if (this.cityId === cityid) { return; }
+    console.log('456')
+    this.axios.get('/api/cinemaList?cityId=' + cityid).then((res) => {
       console.log(res)
       var msg = res.data.msg
       if (msg === 'ok') {
         this.cinemaList = res.data.data.cinemas
+        this.isShow = false
+        this.cityId = cityid
       }
     })
   },
