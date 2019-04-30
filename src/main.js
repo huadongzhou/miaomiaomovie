@@ -11,6 +11,12 @@ Vue.filter('setWH', (url, WH) => {
   return url.replace(/w\.h/, WH)
 })
 
+import Scroller from '@/components/Scroller'
+Vue.component('Scroller', Scroller)
+
+import Loading from '@/components/Loading'
+Vue.component('Loading', Loading)
+
 new Vue({
   router,
   store,

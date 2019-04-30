@@ -6,7 +6,7 @@
         <router-link tag="div"
                      to="/movie/city"
                      class="city_name">
-          <span>大连</span><i class="iconfont icon-lower-triangle"></i>
+          <span>{{ $store.state.city.nm }}</span><i class="iconfont icon-lower-triangle"></i>
         </router-link>
         <div class="hot_swtich">
           <router-link tag="div"
@@ -33,11 +33,46 @@
 <script>
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
+import { messageBox } from '@/components/Js/index.js'
+import { setTimeout } from 'timers';
 export default {
   name: 'AppMovie',
+  data () {
+    return {
+      cityId: -1
+    }
+  },
   components: {
     Header,
     TabBar
+  },
+  mounted () {
+    var cityid = this.$store.state.city.id
+
+
+    setTimeout(() => {
+      this.axios.get('/api/getLocation').then((res) => {
+        var msg = res.data.msg
+        if (msg == 'ok') {
+          var data = res.data.data
+          var nm = data.nm
+          var id = data.id
+          console.log(cityid, id)//注意两字符一个字符一个数字 用==
+          if (cityid == id) { return; }
+          messageBox({
+            title: '定位',
+            content: nm,
+            cancel: '取消',
+            ok: '切换城市',
+            handleOk () {
+              window.localStorage.setItem('citynm', nm)
+              window.localStorage.setItem('cityid', id)
+              window.location.reload();
+            }
+          });
+        }
+      })
+    }, 3000)
   }
 }
 </script>
