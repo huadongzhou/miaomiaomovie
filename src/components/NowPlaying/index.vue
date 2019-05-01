@@ -9,9 +9,9 @@
         <li v-for="movie of movieList"
             :key="movie.id">
           <div class="pic_show"
-               @tap="handleToDetail"><img :src="movie.img | setWH('128.180')"></div>
+               @tap="handleToDetail(movie.id)"><img :src="movie.img | setWH('128.180')"></div>
           <div class="info_list">
-            <h2>{{movie.nm}} <img v-if="movie.version"
+            <h2 @tap="handleToDetail(movie.id)">{{movie.nm}} <img v-if="movie.version"
                    src="@/assets/maxs.png"></h2>
             <p>观众评 <span class="grade">{{movie.sc}}</span></p>
             <p>主演: {{movie.star}}</p>
@@ -52,8 +52,8 @@ export default {
     })
   },
   methods: {
-    handleToDetail () {
-      console.log('handleToDetail')
+    handleToDetail (movieId) {
+      this.$router.push('/movie/detail/1/' + movieId)
     },
     handleToScroll (pos) {
       if (pos.y > 30) {
