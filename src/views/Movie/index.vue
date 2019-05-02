@@ -53,16 +53,18 @@ export default {
 
     setTimeout(() => {
       this.axios.get('/api/getLocation').then((res) => {
+        console.log(res)
         var msg = res.data.msg
         if (msg == 'ok') {
           var data = res.data.data
           var nm = data.nm
           var id = data.id
+          console.log(nm, id)
           console.log(cityid, id)//注意两字符一个字符一个数字 用==
           if (cityid == id) { return; }
           messageBox({
             title: '定位',
-            content: nm,
+            content: '成都',
             cancel: '取消',
             ok: '切换城市',
             handleOk () {
